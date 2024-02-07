@@ -13,12 +13,8 @@ export class ReadingListEffects implements OnInitEffects {
       ofType(ReadingListActions.init),
       exhaustMap(() =>
         this.http.get<ReadingListItem[]>('/api/reading-list').pipe(
-          map((data) =>
-            ReadingListActions.loadReadingListSuccess({ list: data })
-          ),
-          catchError((error) =>
-            of(ReadingListActions.loadReadingListError({ error }))
-          )
+          map((data) => ReadingListActions.loadReadingListSuccess({ list: data })),
+          catchError((error) => of(ReadingListActions.loadReadingListError({ error })))
         )
       )
     )
@@ -30,9 +26,7 @@ export class ReadingListEffects implements OnInitEffects {
       concatMap(({ book }) =>
         this.http.post('/api/reading-list', book).pipe(
           map(() => ReadingListActions.confirmedAddToReadingList({ book })),
-          catchError(() =>
-            of(ReadingListActions.failedAddToReadingList({ book }))
-          )
+          catchError(() => of(ReadingListActions.failedAddToReadingList({ book })))
         )
       )
     )
@@ -43,12 +37,20 @@ export class ReadingListEffects implements OnInitEffects {
       ofType(ReadingListActions.removeFromReadingList),
       concatMap(({ item }) =>
         this.http.delete(`/api/reading-list/${item.bookId}`).pipe(
-          map(() =>
-            ReadingListActions.confirmedRemoveFromReadingList({ item })
-          ),
-          catchError(() =>
-            of(ReadingListActions.failedRemoveFromReadingList({ item }))
-          )
+          map(() => ReadingListActions.confirmedRemoveFromReadingList({ item })),
+          catchError(() => of(ReadingListActions.failedRemoveFromReadingList({ item })))
+        )
+      )
+    )
+  );
+
+  markBookAsFinished$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ReadingListActions.markBookAsFinished),
+      concatMap(({ item }) =>
+        this.http.put(`/api/reading-list/${item.bookId}/finished`, item).pipe(
+          map(() => ReadingListActions.confirmedMarkBookAsFinished({ item })),
+          catchError(() => of(ReadingListActions.failedRemoveFromReadingList({ item })))
         )
       )
     )
