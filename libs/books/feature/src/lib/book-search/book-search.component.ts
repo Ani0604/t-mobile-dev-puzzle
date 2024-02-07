@@ -35,6 +35,17 @@ export class BookSearchComponent implements OnInit {
     this.store.select(getAllBooks).subscribe(books => {
       this.books = books;
     });
+
+    this.searchForm
+      .get('term')
+      .valueChanges.pipe(debounceTime(500), distinctUntilChanged())
+      .subscribe((searchTerm) => {
+        if (searchTerm) {
+          this.store.dispatch(searchBooks({ term: this.searchTerm }));
+        } else {
+          this.store.dispatch(clearSearch());
+        }
+      });
   }
 
   formatDate(date: void | string) {
@@ -60,3 +71,11 @@ export class BookSearchComponent implements OnInit {
     }
   }
 }
+function debounceTime(arg0: number): any {
+  throw new Error('Function not implemented.');
+}
+
+function distinctUntilChanged(): any {
+  throw new Error('Function not implemented.');
+}
+
