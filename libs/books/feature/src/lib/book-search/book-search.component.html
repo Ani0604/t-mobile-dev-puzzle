@@ -26,9 +26,7 @@
         <div class="book--content--info">
           <div><strong>Author:</strong> {{ b.authors.join(',') }}</div>
           <div><strong>Publisher:</strong> {{ b.publisher }}</div>
-          <div>
-            <strong>Published:</strong> {{ formatDate(b.publishedDate) }}
-          </div>
+          <div><strong>Published:</strong> {{ formatDate(b.publishedDate) }}</div>
           <p [innerHTML]="b.description"></p>
           <div>
             <button
@@ -37,7 +35,7 @@
               (click)="addBookToReadingList(b)"
               [disabled]="b.isAdded"
             >
-              Want to Read
+              {{ b.finished ? 'Finished' : 'Want to Read' }}
             </button>
           </div>
         </div>
@@ -47,10 +45,6 @@
 </ng-container>
 <ng-template #empty>
   <div class="empty">
-    <p>
-      Try searching for a topic, for example "<a (click)="searchExample()"
-        >JavaScript</a
-      >".
-    </p>
+    <p>Try searching for a topic, for example "<a (click)="searchExample()">JavaScript</a>".</p>
   </div>
 </ng-template>
